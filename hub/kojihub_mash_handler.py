@@ -17,6 +17,7 @@
 import logging
 
 import koji
+from koji.context import context
 
 
 log = logging.getLogger("koji.plugin.kojihub_mash_handler")
@@ -26,7 +27,6 @@ def mash_tree(mash_target, build_tag, mash_opts, priority=None):
     """Mash the repository tree"""
     log.debug("Mashing '%s'..." % mash_target)
 
-    # TODO: How to get the `context`?
     context.session.assertPerm("admin")
 
     task_opts = {'channel': 'mash'}
