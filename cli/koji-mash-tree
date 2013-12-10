@@ -49,6 +49,18 @@ def parse_args():
                         default=True, help="Don't wait on the mash task")
 
     # The mash options
+    parser.add_argument("--mash-config", help="The mash config file to use")
+    parser.add_argument("--mash-outputdir", dest="output_dir",
+                        help="The output directory")
+    parser.add_argument("--mash-previousdir", dest="previous_dir",
+                        help="The path to the previous mash run, to use as a "
+                             "basis for createrepo")
+    parser.add_argument("--mash-deltadir", dest="delta_dir",
+                        help="The path to the previous directory, to use for "
+                             "deltarpm creation")
+    parser.add_argument("--mash-compsfile", dest="comps_file",
+                        help="The comps file to use when mashing")
+
     parser.add_argument("mash_target", help="The target (~ distribution) to "
                                             "mash")
     parser.add_argument("build_tag", help="The corresponding Koji build tag")
@@ -72,8 +84,12 @@ def main(opts, args):
     session.ssl_login(opts.get("koji", "cert"), opts.get("koji", "ca"),
                       opts.get("koji", "serverca"))
 
-    # TODO: Get the mash options
     mash_opts = {}
+    for attr in ("mash_config", "output_dir", "previous_dir",
+                 "delta_dir", "comps_file"):
+        value = getattr(args, attr)
+        if value is not None:
+            mash_opts[attr] = value
 
     priority = 5 if args.background else None
 
