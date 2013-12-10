@@ -38,6 +38,8 @@ DEFAULT_KOJI_CONFIG = "/etc/koji.conf"
 
 def parse_args():
     parser = argparse.ArgumentParser()
+
+    # Some common Koji options
     parser.add_argument("-c", "--config", default=DEFAULT_KOJI_CONFIG,
                         help=("The koji configuration file (default: %s)"
                               % DEFAULT_KOJI_CONFIG))
@@ -45,6 +47,11 @@ def parse_args():
                         help="Run the build at a lower priority")
     parser.add_argument("--nowait", action="store_false", dest="wait",
                         default=True, help="Don't wait on the mash task")
+
+    # The mash options
+    parser.add_argument("mash_target", help="The target (~ distribution) to "
+                                            "mash")
+    parser.add_argument("build_tag", help="The corresponding Koji build tag")
 
     return parser.parse_args()
 
@@ -65,16 +72,13 @@ def main(opts, args):
     session.ssl_login(opts.get("koji", "cert"), opts.get("koji", "ca"),
                       opts.get("koji", "serverca"))
 
-    # TODO: Get the mash target
-    mash_target = "nb5.0-free"
-    # TODO: Get the build tag
-    build_tag = "nb5.0-free-build"
     # TODO: Get the mash options
     mash_opts = {}
 
     priority = 5 if args.background else None
 
-    task_id = session.mash_tree(mash_target, build_tag, mash_opts, priority)
+    task_id = session.mash_tree(args.mash_target, args.build_tag, mash_opts,
+                                priority)
 
     print("Created task: %d" % task_id)
     print("Task info: %s/taskinfo?taskID=%d" % (opts.get("koji", "weburl"),
