@@ -1,0 +1,58 @@
+#!/usr/bin/python2
+
+
+import argparse
+from ConfigParser import SafeConfigParser
+import os
+import sys
+
+import koji
+
+
+DEFAULT_KOJI_CONFIG = "/etc/koji.conf"
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", default=DEFAULT_KOJI_CONFIG,
+                        help=("The koji configuration file (default: %s)"
+                              % DEFAULT_KOJI_CONFIG))
+
+    return parser.parse_args()
+
+def get_config(config_file):
+    config = SafeConfigParser()
+    config.read(config_file)
+
+    # These options are often specified with a '~'
+    for opt in ("cert", "ca", "serverca"):
+        config.set("koji", opt, os.path.expanduser(config.get("koji", opt)))
+
+    return config
+
+def main(opts, args):
+    session = koji.ClientSession(opts.get("koji", "server"))
+
+    # TODO: Handle other authentication methods
+    session.ssl_login(opts.get("koji", "cert"), opts.get("koji", "ca"),
+                      opts.get("koji", "serverca"))
+
+    # TODO: Get the mash target
+    mash_target = "nb5.0-free"
+    # TODO: Get the build tag
+    build_tag = "nb5.0-free-build"
+    # TODO: Get the mash options
+    mash_opts = {}
+    # TODO: Handle the priority
+    priority = 1
+
+    session.mash_tree(mash_target, build_tag, mash_opts, priority)
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    opts = get_config(args.config)
+
+    main(opts, args)
+
+    sys.exit(0)
