@@ -1,9 +1,13 @@
+import logging
+
 import koji
+
+
+log = logging.getLogger("koji.plugin.kojihub_mash_handler")
 
 
 def mash_tree(mash_target, build_tag, mash_opts, priority=None):
     """Mash the repository tree"""
-    # TODO: How to log?
     log.debug("Mashing '%s'..." % mash_target)
 
     # TODO: How to get the `context`?
