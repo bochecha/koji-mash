@@ -32,6 +32,8 @@ def parse_args():
     parser.add_argument("-c", "--config", default=DEFAULT_KOJI_CONFIG,
                         help=("The koji configuration file (default: %s)"
                               % DEFAULT_KOJI_CONFIG))
+    parser.add_argument("--background", action="store_true", default=False,
+                        help="Run the build at a lower priority")
 
     return parser.parse_args()
 
@@ -58,8 +60,8 @@ def main(opts, args):
     build_tag = "nb5.0-free-build"
     # TODO: Get the mash options
     mash_opts = {}
-    # TODO: Handle the priority
-    priority = 1
+
+    priority = 5 if args.background else None
 
     session.mash_tree(mash_target, build_tag, mash_opts, priority)
 
