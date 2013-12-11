@@ -15,6 +15,16 @@ We provide 3 things:
 The latter is optional, feel free to directly query the Koji Hub in your own
 scripts via XMLRPC. ;-)
 
+## Usage
+
+The easiest way to start a mash task is to use the provided command-line tool:
+
+```
+# koji-mash-tree f20 f20-build
+```
+
+See the `--help` option for more details on how to use it.
+
 ## Legalities
 
 The 2 plugins and the command line tool are offered under the terms of the
