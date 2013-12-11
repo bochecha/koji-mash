@@ -1,0 +1,14 @@
+* cli: Export the task-watching code from upstream Koji in their public API,
+  so we can just reuse it here.
+
+* cli: Handle non-SSL authentication methods
+
+* hub: Export the task making code from upstream Koji in their public API, so
+  we can just reuse it here.
+
+* builder: Export the buildroot code from upstream Koji in their public API,
+  so we can just reuse it here.
+
+* builder: Handle the mashed tree
+
+* cli+builder: Handle the new --no-delta option from Mash
