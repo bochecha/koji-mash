@@ -57,6 +57,8 @@ class MashTreeTask(BaseTaskHandler):
             mash_cmd.extend(["--delta", mash_opts["delta_dir"]])
         if "comps_file" in mash_opts:
             mash_cmd.extend(["--compsfile", mash_opts["comps_file"]])
+        if not mash_opts["do_delta"]:
+            mash_cmd.append("--no-delta")
 
         mash_cmd.append(mash_target)
 

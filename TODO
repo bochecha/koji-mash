@@ -10,5 +10,3 @@
   so we can just reuse it here.
 
 * builder: Handle the mashed tree
-
-* cli+builder: Handle the new --no-delta option from Mash

@@ -60,6 +60,9 @@ def parse_args():
                              "deltarpm creation")
     parser.add_argument("--mash-compsfile", dest="comps_file",
                         help="The comps file to use when mashing")
+    parser.add_argument("--mash-nodelta", action="store_false",
+                        dest="do_delta", default=True,
+                        help="Do not generate deltarpms")
 
     parser.add_argument("mash_target", help="The target (~ distribution) to "
                                             "mash")
@@ -86,7 +89,7 @@ def main(opts, args):
 
     mash_opts = {}
     for attr in ("mash_config", "output_dir", "previous_dir",
-                 "delta_dir", "comps_file"):
+                 "delta_dir", "comps_file", "do_delta"):
         value = getattr(args, attr)
         if value is not None:
             mash_opts[attr] = value
