@@ -20,6 +20,12 @@ import koji
 from koji.context import context
 
 
+# FIXME: This is pretty disgusting
+kojihub = {"__name__": "anything but __main__"}
+execfile("/usr/share/koji-hub/kojihub.py", kojihub)
+make_task = kojihub["make_task"]
+
+
 log = logging.getLogger("koji.plugin.kojihub_mash_handler")
 
 
@@ -33,7 +39,6 @@ def mash_tree(mash_target, build_tag, mash_opts, priority=None):
     if priority is not None:
         task_opts["priority"] = koji.PRIO_DEFAULT + priority
 
-    # TODO: How to make the task?
     return make_task('mashTree', [mash_target, build_tag, mash_opts],
                      **task_opts)
 
