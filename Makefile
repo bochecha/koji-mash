@@ -12,4 +12,8 @@ install-hub-plugin:
 	mkdir -p $(DESTDIR)$(hubplugindir)
 	install -p -m 0644 hub/kojihub_mash_handler.py $(DESTDIR)$(hubplugindir)
 
-install: install-cli install-hub-plugin
+install-builder-plugin:
+	mkdir -p $(DESTDIR)$(builderplugindir)
+	install -p -m 0644 builder/kojibuilder_mash_task.py $(DESTDIR)$(builderplugindir)
+
+install: install-cli install-hub-plugin install-builder-plugin
