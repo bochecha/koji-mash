@@ -24,6 +24,14 @@ import sys
 import koji
 
 
+class Options(object):
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+    def update(self, d):
+        self.__dict__.update(d)
+
+
 # FIXME: This is pretty disgusting
 class Object(object): pass
 kojicli_options = Object()
@@ -80,40 +88,45 @@ def get_config(config_file):
 
     return config
 
-def main(opts, args):
-    session = koji.ClientSession(opts.get("koji", "server"))
+def merge_args_config(config, args):
+    opts = Options(**dict(config.items("koji")))
+    opts.update(args.__dict__)
+
+    return opts
+
+def main(opts):
+    session = koji.ClientSession(opts.server)
 
     # TODO: Handle other authentication methods
-    session.ssl_login(opts.get("koji", "cert"), opts.get("koji", "ca"),
-                      opts.get("koji", "serverca"))
+    session.ssl_login(opts.cert, opts.ca, opts.serverca)
 
     mash_opts = {}
     for attr in ("mash_config", "output_dir", "previous_dir",
                  "delta_dir", "comps_file", "do_delta"):
-        value = getattr(args, attr)
+        value = getattr(opts, attr)
         if value is not None:
             mash_opts[attr] = value
 
-    priority = 5 if args.background else None
+    priority = 5 if opts.background else None
 
-    task_id = session.mash_tree(args.mash_target, args.build_tag, mash_opts,
+    task_id = session.mash_tree(opts.mash_target, opts.build_tag, mash_opts,
                                 priority)
 
     print("Created task: %d" % task_id)
-    print("Task info: %s/taskinfo?taskID=%d" % (opts.get("koji", "weburl"),
-                                                task_id))
+    print("Task info: %s/taskinfo?taskID=%d" % (opts.weburl, task_id))
 
-    if args.wait:
+    if opts.wait:
         session.logout()
         return watch_tasks(session, [task_id])
 
 
 if __name__ == "__main__":
     args = parse_args()
-    opts = get_config(args.config)
+    config = get_config(args.config)
+    opts = merge_args_config(config, args)
 
     try:
-        main(opts, args)
+        main(opts)
 
     except Exception as e:
         sys.stderr.write("Could not mash: %s\n" % e)
