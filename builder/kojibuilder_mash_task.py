@@ -39,8 +39,14 @@ class MashTreeTask(BaseTaskHandler):
                                                    event=repo["create_event"])
         arch = self.find_arch("noarch", host, build_config)
 
+        # WARNING: This will bind mount the topdir inside the chroot, to write
+        #          the mash output to it. Use with caution.
+        #          Mock takes care of unmounting it at the end.
+        bind_opts = {'dirs' : {self.options.topdir : self.options.topdir}}
+
         root = BuildRoot(self.session, self.options, build_tag["name"], arch,
-                          self.id, repo_id=repo["id"], install_group='mash')
+                         self.id, repo_id=repo["id"], install_group='mash',
+                         bind_opts=bind_opts)
         root.workdir = self.workdir
         self.logger.debug("Initializing buildroot")
         root.init()
@@ -71,23 +77,5 @@ class MashTreeTask(BaseTaskHandler):
                                       % root._mockResult(rv, logfile="mock_output.log"))
         end = datetime.now()
         self.logger.error("Mash finished in %s" % (end - begin))
-
-        # TODO: What to do with the mashed tree?
-        #
-        # We could try to upload it back...
-        #mashed_dir = os.path.join(root.rootdir(),
-        # TODO: Find a way to get to the outputdir (either from mash_opts or
-        #       from the conf files **inside** the chroot)
-        #                          "store/koji/mash/mashed/%s" % mash_target)
-        #
-        #self.logger.error("Uploading the results")
-        #begin = datetime.now()
-        #root.uploadDir(mashed_dir, recursive=True)
-        #end = datetime.now()
-        #self.logger.error("Upload finished in %s" % (end - begin))
-        #
-        # Or we could not do anything, and assume that the outputdir is
-        # mounted read-write inside the chroot.
-        # But mikem doesn't like that :-/
 
         return {"brootid": root.id}

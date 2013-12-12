@@ -8,5 +8,3 @@
 
 * builder: Export the buildroot code from upstream Koji in their public API,
   so we can just reuse it here.
-
-* builder: Handle the mashed tree
