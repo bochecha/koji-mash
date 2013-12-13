@@ -39,16 +39,13 @@ execfile("/usr/bin/koji", kojicli)
 watch_tasks = kojicli["watch_tasks"]
 
 
-DEFAULT_KOJI_CONFIG = "/etc/koji.conf"
-
-
 def parse_args():
     parser = argparse.ArgumentParser()
 
     # Some common Koji options
-    parser.add_argument("-c", "--config", default=DEFAULT_KOJI_CONFIG,
-                        help=("The koji configuration file (default: %s)"
-                              % DEFAULT_KOJI_CONFIG))
+    parser.add_argument("-c", "--config", default="/etc/koji.conf",
+                        help=("The koji configuration file (default: "
+                              "%(default)s)"))
     parser.add_argument("--background", action="store_true", default=False,
                         help="Run the build at a lower priority")
     parser.add_argument("--nowait", action="store_false", dest="wait",
