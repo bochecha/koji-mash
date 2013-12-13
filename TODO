@@ -1,8 +1,6 @@
 * cli: Export the task-watching code from upstream Koji in their public API,
   so we can just reuse it here.
 
-* cli: Handle non-SSL authentication methods
-
 * hub: Export the task making code from upstream Koji in their public API, so
   we can just reuse it here.
 
