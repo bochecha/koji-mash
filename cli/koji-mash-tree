@@ -59,6 +59,11 @@ def parse_args():
                                        "also --password)")
     parser.add_argument("--password", help="The password to authenticate with"
                                            " (see also --user)")
+    parser.add_argument("--keytab", help="The Kerberos keytab to authenticate"
+                                         " with (see also --principal)")
+    parser.add_argument("--principal", help="The Kerberos principal to "
+                                            "authenticate with (see also "
+                                            "--keytab)")
 
     # The mash options
     parser.add_argument("--mash-config", help="The mash config file to use")
@@ -84,6 +89,11 @@ def parse_args():
 
     if (args.user and not args.password) or (args.password and not args.user):
         parser.error("The --user and --password arguments must be used "
+                     "together")
+
+    if ((args.keytab and not args.principal) or
+        (args.principal and not args.keytab)):
+        parser.error("The --keytab and --principal arguments must be used "
                      "together")
 
     return args
@@ -117,6 +127,10 @@ def connect(opts):
     if opts.user:
         # Login/password authentication
         session.login()
+
+    elif opts.keytab:
+        # Kerberos authentication
+        session.krb_login(principal=opts.principal, keytab=opts.keytab)
 
     else:
         # SSL authentication
