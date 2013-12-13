@@ -74,7 +74,9 @@ def parse_args():
                                             "mash")
     parser.add_argument("build_tag", help="The corresponding Koji build tag")
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    return args
 
 def get_config(config_file):
     config = SafeConfigParser()
