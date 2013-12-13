@@ -2,6 +2,7 @@ Deployment is a three-part process, as their are three components to install.
 
 One thing to note are the requirements:
 
+* The argparse Python module
 * Koji >= 1.8.0 (things might work with older versions, but this is the
                  earliest one we've ever tested)
 * mash >= 0.6.02 (for the `--no-delta` option)
