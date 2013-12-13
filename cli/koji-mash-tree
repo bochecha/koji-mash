@@ -176,6 +176,7 @@ if __name__ == "__main__":
 
     except Exception as e:
         sys.stderr.write("Could not connect to the Koji Hub: %s" % e)
+        sys.exit(1)
 
     try:
         mash(session, opts)
