@@ -92,11 +92,17 @@ def merge_args_config(config, args):
 
     return opts
 
-def main(opts):
-    session = koji.ClientSession(opts.server)
+def connect(opts):
+    session_opts = {}
+    session = koji.ClientSession(opts.server, session_opts)
 
     # TODO: Handle other authentication methods
     session.ssl_login(opts.cert, opts.ca, opts.serverca)
+
+    return session
+
+def main(opts):
+    session = connect(opts)
 
     mash_opts = {}
     for attr in ("mash_config", "output_dir", "previous_dir",
