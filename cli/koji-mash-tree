@@ -54,6 +54,12 @@ def parse_args():
     parser.add_argument("--nowait", action="store_false", dest="wait",
                         default=True, help="Don't wait on the mash task")
 
+    # Authentication options
+    parser.add_argument("--user", help="The user to authenticate as (see "
+                                       "also --password)")
+    parser.add_argument("--password", help="The password to authenticate with"
+                                           " (see also --user)")
+
     # The mash options
     parser.add_argument("--mash-config", help="The mash config file to use")
     parser.add_argument("--mash-outputdir", dest="output_dir",
@@ -76,6 +82,10 @@ def parse_args():
 
     args = parser.parse_args()
 
+    if (args.user and not args.password) or (args.password and not args.user):
+        parser.error("The --user and --password arguments must be used "
+                     "together")
+
     return args
 
 def get_config(config_file):
@@ -96,10 +106,21 @@ def merge_args_config(config, args):
 
 def connect(opts):
     session_opts = {}
+
+    # These must be passed to the session when creating it
+    if opts.user is not None:
+        session_opts = {"user": opts.user,
+                        "password": opts.password}
+
     session = koji.ClientSession(opts.server, session_opts)
 
-    # TODO: Handle other authentication methods
-    session.ssl_login(opts.cert, opts.ca, opts.serverca)
+    if opts.user:
+        # Login/password authentication
+        session.login()
+
+    else:
+        # SSL authentication
+        session.ssl_login(opts.cert, opts.ca, opts.serverca)
 
     return session
 
