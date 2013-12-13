@@ -96,6 +96,10 @@ def parse_args():
         parser.error("The --keytab and --principal arguments must be used "
                      "together")
 
+    if args.user and args.keytab:
+        parser.error("Use either the login/password or Kerberos "
+                     "authentication methods, not both")
+
     return args
 
 def get_config(config_file):
