@@ -52,15 +52,21 @@ def parse_args():
                         default=True, help="Don't wait on the mash task")
 
     # Authentication options
-    parser.add_argument("--user", help="The user to authenticate as (see "
-                                       "also --password)")
-    parser.add_argument("--password", help="The password to authenticate with"
-                                           " (see also --user)")
-    parser.add_argument("--keytab", help="The Kerberos keytab to authenticate"
-                                         " with (see also --principal)")
-    parser.add_argument("--principal", help="The Kerberos principal to "
-                                            "authenticate with (see also "
-                                            "--keytab)")
+    auth = parser.add_argument_group("Authentication options",
+                                     "These options allow specifying "
+                                     "credentials to authenticate to the Koji"
+                                     " Hub. SSL-based authentication will be "
+                                     "used if none of these options are "
+                                     "specified")
+    auth.add_argument("--user", help="The user to authenticate as (see also "
+                                     "--password)")
+    auth.add_argument("--password", help="The password to authenticate with "
+                                         "(see also --user)")
+    auth.add_argument("--keytab", help="The Kerberos keytab to authenticate "
+                                       "with (see also --principal)")
+    auth.add_argument("--principal", help="The Kerberos principal to "
+                                          "authenticate with (see also "
+                                          "--keytab)")
 
     # The mash options
     parser.add_argument("--mash-config", help="The mash config file to use")
