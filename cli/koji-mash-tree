@@ -69,20 +69,20 @@ def parse_args():
                                           "--keytab)")
 
     # The mash options
-    parser.add_argument("--mash-config", help="The mash config file to use")
-    parser.add_argument("--mash-outputdir", dest="output_dir",
-                        help="The output directory")
-    parser.add_argument("--mash-previousdir", dest="previous_dir",
-                        help="The path to the previous mash run, to use as a "
-                             "basis for createrepo")
-    parser.add_argument("--mash-deltadir", dest="delta_dir",
-                        help="The path to the previous directory, to use for "
-                             "deltarpm creation")
-    parser.add_argument("--mash-compsfile", dest="comps_file",
-                        help="The comps file to use when mashing")
-    parser.add_argument("--mash-nodelta", action="store_false",
-                        dest="do_delta", default=True,
-                        help="Do not generate deltarpms")
+    mash = parser.add_argument_group("Mash options")
+    mash.add_argument("--mash-config", help="The mash config file to use")
+    mash.add_argument("--mash-outputdir", dest="output_dir",
+                      help="The output directory")
+    mash.add_argument("--mash-previousdir", dest="previous_dir",
+                      help="The path to the previous mash run, to use as a "
+                           "basis for createrepo")
+    mash.add_argument("--mash-deltadir", dest="delta_dir",
+                      help="The path to the previous directory, to use for "
+                           "deltarpm creation")
+    mash.add_argument("--mash-compsfile", dest="comps_file",
+                      help="The comps file to use when mashing")
+    mash.add_argument("--mash-nodelta", action="store_false", dest="do_delta",
+                      default=True, help="Do not generate deltarpms")
 
     parser.add_argument("mash_target", help="The target (~ distribution) to "
                                             "mash")
